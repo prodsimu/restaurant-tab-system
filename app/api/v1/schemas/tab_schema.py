@@ -6,4 +6,4 @@ class TabBaseSchema(BaseModel):
 
 
 class TabCreateSchema(TabBaseSchema):
-    pass
+    is_empty: bool = Field(default=True)

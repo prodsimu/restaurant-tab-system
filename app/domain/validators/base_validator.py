@@ -11,3 +11,9 @@ class BaseValidator:
         if value <= 0:
             raise ValueError(f"{field} must be greater than 0.")
         return value
+
+    @staticmethod
+    def validate_boolean(value: bool, field: str) -> bool:
+        if not isinstance(value, bool):
+            raise ValueError(f"{field} must be a boolean value.")
+        return value

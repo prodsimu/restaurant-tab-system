@@ -1,0 +1,2 @@
+class TabNotFoundError(Exception):
+    pass

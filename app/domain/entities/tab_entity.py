@@ -8,5 +8,4 @@ class TabCreateEntity:
     number: int
 
     def validate(self) -> None:
-        self.number = BaseValidator.validate_non_empty(str(self.number), "number")
-        self.number = int(self.number)
+        self.number = BaseValidator.validate_positive_int(self.number, "number")

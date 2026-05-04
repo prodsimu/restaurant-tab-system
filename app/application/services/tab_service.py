@@ -39,10 +39,20 @@ class TabService:
         tab = db.query(TabModel).filter(TabModel.number == number).first()
 
         if not tab:
-            raise TabNotFoundError("User not found.")
+            raise TabNotFoundError("Tab not found.")
 
         return tab
 
     # UPDATE
 
     # DELETE
+
+    @staticmethod
+    def delete_tab_by_number(db: Session, number: int) -> TabModel:
+
+        tab = TabService.get_tab_by_number(db, number)
+
+        db.delete(tab)
+        db.commit()
+
+        return tab

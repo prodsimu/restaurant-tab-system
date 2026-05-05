@@ -1,8 +1,11 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from app.api.v1.schemas.tab_schema import TabCreateSchema
 from app.domain.entities.tab_entity import TabCreateEntity
 from app.domain.exceptions.tab_exceptions import (
+    TabAlreadyClosedError,
     TabAlreadyOpenError,
     TabNotFoundError,
 )
@@ -55,6 +58,22 @@ class TabService:
         return tab
 
     # UPDATE
+
+    @staticmethod
+    def close_tab_by_number(db: Session, number: int) -> TabModel:
+
+        tab = TabService.get_tab_by_number(db, number)
+
+        if tab.is_open:
+            raise TabAlreadyClosedError("Tab is already closed.")
+
+        tab.is_open = False
+        tab.closed_at = datetime.now(timezone.utc)
+
+        db.commit()
+        db.refresh(tab)
+
+        return tab
 
     # DELETE
 

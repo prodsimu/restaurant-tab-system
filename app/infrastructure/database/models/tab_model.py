@@ -10,6 +10,6 @@ class TabModel(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     number = Column(Integer, unique=True)
-    is_open = Column(Boolean, default=False)
+    is_open = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     closed_at = Column(DateTime, nullable=True)

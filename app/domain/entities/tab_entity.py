@@ -7,7 +7,7 @@ from app.domain.validators.base_validator import BaseValidator
 @dataclass
 class TabCreateEntity:
     number: int
-    is_open: bool = False
+    is_open: bool = True
     created_at: datetime = datetime.now(timezone.utc)
     closed_at: None = None
 

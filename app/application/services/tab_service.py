@@ -2,7 +2,10 @@ from sqlalchemy.orm import Session
 
 from app.api.v1.schemas.tab_schema import TabCreateSchema
 from app.domain.entities.tab_entity import TabCreateEntity
-from app.domain.exceptions.tab_exceptions import TabAlreadyExistsError, TabNotFoundError
+from app.domain.exceptions.tab_exceptions import (
+    TabAlreadyOpenError,
+    TabNotFoundError,
+)
 from app.infrastructure.database.models.tab_model import TabModel
 
 
@@ -13,12 +16,13 @@ class TabService:
     @staticmethod
     def create_tab(db: Session, data: TabCreateSchema):
 
-        try:
-            TabService.get_tab_by_number(db, data.number)
-            raise TabAlreadyExistsError(f"Tab {data.number} already exists.")
+        existing_tabs = db.query(TabModel).filter(TabModel.number == data.number).all()
 
-        except TabNotFoundError:
-            pass
+        for tab in existing_tabs:
+            if tab.is_open:
+                raise TabAlreadyOpenError(
+                    "An open tab with this number already exists."
+                )
 
         entity = TabCreateEntity(
             data.number, data.is_open, data.created_at, data.closed_at

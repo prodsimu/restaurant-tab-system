@@ -17,3 +17,9 @@ class BaseValidator:
         if not isinstance(value, bool):
             raise ValueError(f"{field} must be a boolean value.")
         return value
+
+    @staticmethod
+    def validate_datetime(value, field: str):
+        if not isinstance(value, (str,)):
+            raise ValueError(f"{field} must be a datetime string.")
+        return value

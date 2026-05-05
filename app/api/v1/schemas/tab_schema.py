@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from pydantic import BaseModel, Field
 
 
@@ -6,4 +8,6 @@ class TabBaseSchema(BaseModel):
 
 
 class TabCreateSchema(TabBaseSchema):
-    is_empty: bool = Field(default=True)
+    is_open: bool = Field(default=True)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    closed_at: datetime | None = Field(default=None)

@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class BaseValidator:
 
     @staticmethod
@@ -20,7 +23,7 @@ class BaseValidator:
 
     @staticmethod
     def validate_datetime(value, field: str):
-        if not isinstance(value, (str,)):
+        if not isinstance(value, datetime):
             raise ValueError(f"{field} must be a datetime string.")
         return value
 

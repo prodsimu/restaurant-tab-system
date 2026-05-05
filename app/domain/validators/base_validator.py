@@ -23,3 +23,9 @@ class BaseValidator:
         if not isinstance(value, (str,)):
             raise ValueError(f"{field} must be a datetime string.")
         return value
+
+    @staticmethod
+    def validate_none(value, field: str):
+        if value is not None:
+            raise ValueError(f"{field} must be None.")
+        return value

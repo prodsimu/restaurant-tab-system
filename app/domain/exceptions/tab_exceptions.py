@@ -8,3 +8,7 @@ class TabAlreadyExistsError(Exception):
 
 class TabAlreadyOpenError(Exception):
     pass
+
+
+class TabAlreadyClosedError(Exception):
+    pass

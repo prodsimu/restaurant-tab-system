@@ -14,7 +14,7 @@ class TabService:
     # CREATE
 
     @staticmethod
-    def create_tab(db: Session, data: TabCreateSchema):
+    def open_tab_by_number(db: Session, data: TabCreateSchema):
 
         existing_tabs = db.query(TabModel).filter(TabModel.number == data.number).all()
 

@@ -20,11 +20,18 @@ class TabService:
         except TabNotFoundError:
             pass
 
-        entity = TabCreateEntity(data.number, data.is_empty)
+        entity = TabCreateEntity(
+            data.number, data.is_open, data.created_at, data.closed_at
+        )
 
         entity.validate()
 
-        db_model = TabModel(number=entity.number, is_empty=entity.is_empty)
+        db_model = TabModel(
+            number=entity.number,
+            is_open=entity.is_open,
+            created_at=entity.created_at,
+            closed_at=entity.closed_at,
+        )
 
         db.add(db_model)
         db.commit()

@@ -8,6 +8,6 @@ class TabBaseSchema(BaseModel):
 
 
 class TabCreateSchema(TabBaseSchema):
-    is_open: bool = Field(default=True)
+    is_open: bool = Field(default=False)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     closed_at: datetime | None = Field(default=None)

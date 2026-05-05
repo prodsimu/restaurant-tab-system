@@ -31,11 +31,11 @@ def get_tab_by_number(number: int, db: Session = Depends(get_db)):
 
 
 @router.post("/tabs")
-def create_tab(data: TabBaseSchema, db: Session = Depends(get_db)):
+def open_tab_by_number(data: TabBaseSchema, db: Session = Depends(get_db)):
     try:
 
         create_data = TabCreateSchema(number=data.number)
-        tab = TabService.create_tab(db, create_data)
+        tab = TabService.open_tab_by_number(db, create_data)
 
         return tab
 
@@ -44,6 +44,18 @@ def create_tab(data: TabBaseSchema, db: Session = Depends(get_db)):
 
 
 # PUT
+
+
+@router.put("/tabs/close/{number}")
+def close_tab_by_number(number: int, db: Session = Depends(get_db)):
+    try:
+        tab = TabService.close_tab_by_number(db, number)
+
+        return tab
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 
 # DELETE
 

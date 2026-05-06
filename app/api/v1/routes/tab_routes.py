@@ -17,10 +17,10 @@ def list_tabs_by_number(number: int, db: Session = Depends(get_db)):
 
         tabs = TabService.list_tabs_by_number(db, number)
 
+        return tabs
+
     except Exception as e:
         raise HTTPException(status_code=404, detail=str(e))
-
-    return tabs
 
 
 # POST
@@ -55,10 +55,10 @@ def close_tab_by_number(number: int, db: Session = Depends(get_db)):
 # DELETE
 
 
-@router.delete("/tabs/{number}")
-def delete_tab_by_number(number: int, db: Session = Depends(get_db)):
+@router.delete("/tabs/{id}")
+def delete_tab_by_id(id: int, db: Session = Depends(get_db)):
     try:
-        tab = TabService.delete_tab_by_number(db, number)
+        tab = TabService.delete_tab_by_id(db, id)
 
         return tab
 

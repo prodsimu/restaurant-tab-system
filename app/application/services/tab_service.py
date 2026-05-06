@@ -81,9 +81,12 @@ class TabService:
     # DELETE
 
     @staticmethod
-    def delete_tab_by_number(db: Session, number: int) -> TabModel:
+    def delete_tab_by_id(db: Session, id: int) -> TabModel:
 
-        tab = TabService.get_tab_by_number(db, number)
+        tab = db.query(TabModel).filter(and_(TabModel.id == id)).first()
+
+        if not tab:
+            raise TabNotFoundError("Tab not found.")
 
         db.delete(tab)
         db.commit()

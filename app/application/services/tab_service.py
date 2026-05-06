@@ -3,7 +3,6 @@ from datetime import datetime, timezone
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
-from app.api.v1.schemas.tab_schema import TabCreateSchema
 from app.domain.entities.tab_entity import TabCreateEntity
 from app.domain.exceptions.tab_exceptions import (
     TabAlreadyClosedError,
@@ -18,19 +17,18 @@ class TabService:
     # CREATE
 
     @staticmethod
-    def open_tab_by_number(db: Session, data: TabCreateSchema):
+    def open_tab_by_number(db: Session, number: int) -> TabModel:
 
-        existing_tabs = db.query(TabModel).filter(TabModel.number == data.number).all()
-
-        for tab in existing_tabs:
-            if tab.is_open:
-                raise TabAlreadyOpenError(
-                    "An open tab with this number already exists."
-                )
-
-        entity = TabCreateEntity(
-            data.number, data.is_open, data.created_at, data.closed_at
+        tab = (
+            db.query(TabModel)
+            .filter(and_(TabModel.number == number, TabModel.is_open))
+            .first()
         )
+
+        if tab:
+            raise TabAlreadyOpenError("An open tab with this number already exists.")
+
+        entity = TabCreateEntity(number, True, datetime.now(timezone.utc), None)
 
         entity.validate()
 

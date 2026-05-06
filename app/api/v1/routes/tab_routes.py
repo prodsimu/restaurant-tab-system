@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.api.v1.schemas.tab_schema import (
-    TabBaseSchema,
     TabCreateSchema,
 )
 from app.application.services.tab_service import TabService
@@ -30,11 +29,11 @@ def get_tab_by_number(number: int, db: Session = Depends(get_db)):
 # POST
 
 
-@router.post("/tabs")
-def open_tab_by_number(data: TabBaseSchema, db: Session = Depends(get_db)):
+@router.post("/tabs/{number}")
+def open_tab_by_number(number: int, db: Session = Depends(get_db)):
     try:
 
-        create_data = TabCreateSchema(number=data.number)
+        create_data = TabCreateSchema(number=number)
         tab = TabService.open_tab_by_number(db, create_data)
 
         return tab
@@ -46,7 +45,7 @@ def open_tab_by_number(data: TabBaseSchema, db: Session = Depends(get_db)):
 # PUT
 
 
-@router.put("/tabs/close/{number}")
+@router.put("/tabs/{number}")
 def close_tab_by_number(number: int, db: Session = Depends(get_db)):
     try:
         tab = TabService.close_tab_by_number(db, number)

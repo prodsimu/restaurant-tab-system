@@ -62,18 +62,20 @@ class TabService:
     @staticmethod
     def close_tab_by_number(db: Session, number: int) -> TabModel:
 
-        tab = TabService.get_tab_by_number(db, number)
+        existing_tabs = db.query(TabModel).filter(TabModel.number == number).all()
 
-        if tab.is_open:
-            raise TabAlreadyClosedError("Tab is already closed.")
+        for tab in existing_tabs:
+            if tab.is_open:
 
-        tab.is_open = False
-        tab.closed_at = datetime.now(timezone.utc)
+                tab.is_open = False
+                tab.closed_at = datetime.now(timezone.utc)
 
-        db.commit()
-        db.refresh(tab)
+                db.commit()
+                db.refresh(tab)
 
-        return tab
+                return tab
+
+        raise TabAlreadyClosedError("No open tab with this number exists.")
 
     # DELETE
 

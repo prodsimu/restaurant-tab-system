@@ -33,8 +33,7 @@ def get_tab_by_number(number: int, db: Session = Depends(get_db)):
 def open_tab_by_number(number: int, db: Session = Depends(get_db)):
     try:
 
-        create_data = TabCreateSchema(number=number)
-        tab = TabService.open_tab_by_number(db, create_data)
+        tab = TabService.open_tab_by_number(db, number)
 
         return tab
 

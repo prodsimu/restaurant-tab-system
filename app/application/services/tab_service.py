@@ -48,13 +48,13 @@ class TabService:
     # READ
 
     @staticmethod
-    def get_tab_by_number(db: Session, number: int) -> TabModel:
-        tab = db.query(TabModel).filter(TabModel.number == number).first()
+    def list_tabs_by_number(db: Session, number: int) -> TabModel:
+        tabs = db.query(TabModel).filter(TabModel.number == number).all()
 
-        if not tab:
-            raise TabNotFoundError("Tab not found.")
+        if not tabs:
+            raise TabNotFoundError("Tabs not found.")
 
-        return tab
+        return tabs
 
     # UPDATE
 

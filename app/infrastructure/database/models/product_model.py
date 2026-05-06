@@ -8,5 +8,4 @@ class ProductModel(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
-    barcode = Column(String, unique=True, index=True)
     price = Column(Integer)

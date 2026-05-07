@@ -14,9 +14,7 @@ router = APIRouter()
 @router.get("/products/{product_id}")
 def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
     try:
-        product = ProductService.get_product_by_id(db, product_id)
-
-        return product
+        return ProductService.get_product_by_id(db, product_id)
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -28,9 +26,7 @@ def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
 @router.post("/products")
 def create_product(data: ProductCreateSchema, db: Session = Depends(get_db)):
     try:
-        product = ProductService.create_product(db, data)
-
-        return product
+        return ProductService.create_product(db, data)
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -42,9 +38,7 @@ def create_product(data: ProductCreateSchema, db: Session = Depends(get_db)):
 @router.patch("/products")
 def update_product(data: ProductUpdateSchema, db: Session = Depends(get_db)):
     try:
-        product = ProductService.update_product(db, data)
-
-        return product
+        return ProductService.update_product(db, data)
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

@@ -51,3 +51,12 @@ def update_product(data: ProductUpdateSchema, db: Session = Depends(get_db)):
 
 
 # DELETE
+
+
+@router.delete("/products/{product_id}")
+def delete_product(product_id: int, db: Session = Depends(get_db)):
+    try:
+        return ProductService.delete_product(db, product_id)
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

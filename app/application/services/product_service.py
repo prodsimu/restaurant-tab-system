@@ -37,17 +37,16 @@ class ProductService:
     # UPDATE
 
     @staticmethod
-    def update_product(db: Session, data: ProductUpdateSchema):
-        product = db.query(ProductModel).filter(ProductModel.id == data.id).first()
+    def update_product(product_id: int, db: Session, data: ProductUpdateSchema):
+        product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
 
         if not product:
-            raise ProductNotFoundError(f"Product with id {data.id} not found")
+            raise ProductNotFoundError(f"Product with id {product_id} not found")
 
         entity = ProductUpdateEntity(**data.dict())
 
         for key, value in entity.__dict__.items():
-            if key != "id" and value is not None:
-                setattr(product, key, value)
+            setattr(product, key, value)
 
         db.commit()
         db.refresh(product)

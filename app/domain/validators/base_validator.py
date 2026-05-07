@@ -11,6 +11,8 @@ class BaseValidator:
 
     @staticmethod
     def validate_positive_int(value: int, field: str) -> int:
+        if not isinstance(value, int):
+            raise ValueError(f"{field} must be a integer number.")
         if value <= 0:
             raise ValueError(f"{field} must be greater than 0.")
         return value

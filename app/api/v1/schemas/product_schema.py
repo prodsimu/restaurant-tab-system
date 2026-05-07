@@ -8,3 +8,9 @@ class ProductBaseSchema(BaseModel):
 
 class ProductCreateSchema(ProductBaseSchema):
     pass
+
+
+class ProductUpdateSchema(ProductBaseSchema):
+    id: int = Field(gt=0)
+    name: str | None = Field(max_length=100, default=None)
+    price: float | None = Field(gt=0, default=None)

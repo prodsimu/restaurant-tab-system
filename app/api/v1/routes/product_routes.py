@@ -10,6 +10,18 @@ router = APIRouter()
 
 # GET
 
+
+@router.get("/products/{product_id}")
+def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
+    try:
+        product = ProductService.get_product_by_id(db, product_id)
+
+        return product
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 # POST
 
 

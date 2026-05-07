@@ -32,8 +32,4 @@ class ProductCreateEntity(ProductBaseEntity):
 
 @dataclass
 class ProductUpdateEntity(ProductBaseEntity):
-    id: int
-
-    def validate(self) -> None:
-        super().validate()
-        self.id = BaseValidator.validate_positive_int(self.id, "id")
+    pass

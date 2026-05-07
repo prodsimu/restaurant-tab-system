@@ -34,3 +34,9 @@ class BaseValidator:
         if value is not None:
             raise ValueError(f"{field} must be None.")
         return value
+
+    @staticmethod
+    def validate_string(value: str, field: str) -> str:
+        if not isinstance(value, str):
+            raise ValueError(f"{field} must be a string.")
+        return BaseValidator.validate_non_empty(value, field)

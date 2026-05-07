@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from app.api.v1.schemas.product_schema import ProductCreateSchema
-from app.domain.entities.product_entity import ProductCreateEntity
+from app.api.v1.schemas.product_schema import ProductCreateSchema, ProductUpdateSchema
+from app.domain.entities.product_entity import ProductCreateEntity, ProductUpdateEntity
 from app.domain.exceptions.product_exceptions import ProductNotFoundError
 from app.infrastructure.database.models.product_model import ProductModel
 
@@ -12,11 +12,8 @@ class ProductService:
 
     @staticmethod
     def create_product(db: Session, data: ProductCreateSchema):
-        from app.infrastructure.database.models.product_model import ProductModel
 
         entity = ProductCreateEntity(**data.dict())
-        entity.validate()
-        entity.normalize()
 
         db_model = ProductModel(name=entity.name, price=entity.price)
 
@@ -34,5 +31,25 @@ class ProductService:
 
         if not product:
             raise ProductNotFoundError(f"Product with id {product_id} not found")
+
+        return product
+
+    # UPDATE
+
+    @staticmethod
+    def update_product(db: Session, data: ProductUpdateSchema):
+        product = db.query(ProductModel).filter(ProductModel.id == data.id).first()
+
+        if not product:
+            raise ProductNotFoundError(f"Product with id {data.id} not found")
+
+        entity = ProductUpdateEntity(**data.dict())
+
+        for key, value in entity.__dict__.items():
+            if key != "id" and value is not None:
+                setattr(product, key, value)
+
+        db.commit()
+        db.refresh(product)
 
         return product

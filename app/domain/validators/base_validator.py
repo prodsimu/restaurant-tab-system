@@ -40,3 +40,11 @@ class BaseValidator:
         if not isinstance(value, str):
             raise ValueError(f"{field} must be a string.")
         return BaseValidator.validate_non_empty(value, field)
+
+    @staticmethod
+    def validate_positive_float(value: float, field: str) -> float:
+        if not isinstance(value, (float, int)):
+            raise ValueError(f"{field} must be a number.")
+        if value <= 0:
+            raise ValueError(f"{field} must be greater than 0.")
+        return float(value)

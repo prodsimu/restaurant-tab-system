@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.application.services.tab_service import TabService
 from app.infrastructure.database.database import get_db
 
-router = APIRouter()
+router = APIRouter(prefix="/tabs", tags=["Tabs"])
 
 
 # GET

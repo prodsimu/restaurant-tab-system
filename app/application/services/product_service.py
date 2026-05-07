@@ -53,3 +53,17 @@ class ProductService:
         db.refresh(product)
 
         return product
+
+    # DELETE
+
+    @staticmethod
+    def delete_product(db: Session, product_id: int):
+        product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+
+        if not product:
+            raise ProductNotFoundError(f"Product with id {product_id} not found")
+
+        db.delete(product)
+        db.commit()
+
+        return product

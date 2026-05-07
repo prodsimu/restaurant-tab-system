@@ -5,7 +5,7 @@ from app.api.v1.schemas.product_schema import ProductCreateSchema, ProductUpdate
 from app.application.services.product_service import ProductService
 from app.infrastructure.database.database import get_db
 
-router = APIRouter()
+router = APIRouter(prefix="/products", tags=["Products"])
 
 
 # GET
@@ -35,10 +35,12 @@ def create_product(data: ProductCreateSchema, db: Session = Depends(get_db)):
 # PATCH
 
 
-@router.patch("/products")
-def update_product(data: ProductUpdateSchema, db: Session = Depends(get_db)):
+@router.patch("/products/{product_id}")
+def update_product(
+    product_id: int, data: ProductUpdateSchema, db: Session = Depends(get_db)
+):
     try:
-        return ProductService.update_product(db, data)
+        return ProductService.update_product(product_id, db, data)
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

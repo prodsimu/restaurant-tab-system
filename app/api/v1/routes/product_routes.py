@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.api.v1.schemas.product_schema import ProductCreateSchema, ProductUpdateSchema
+from app.api.v1.schemas.product_schema import (
+    ProductCreateSchema,
+    ProductResponseSchema,
+    ProductUpdateSchema,
+)
 from app.application.services.product_service import ProductService
 from app.infrastructure.database.database import get_db
 
@@ -11,7 +15,7 @@ router = APIRouter(prefix="/products", tags=["Products"])
 # GET
 
 
-@router.get("/products/{product_id}")
+@router.get("/products/{product_id}", response_model=ProductResponseSchema)
 def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
     try:
         return ProductService.get_product_by_id(db, product_id)
@@ -23,7 +27,7 @@ def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
 # POST
 
 
-@router.post("/products")
+@router.post("/products", response_model=ProductResponseSchema)
 def create_product(data: ProductCreateSchema, db: Session = Depends(get_db)):
     try:
         return ProductService.create_product(db, data)
@@ -35,7 +39,7 @@ def create_product(data: ProductCreateSchema, db: Session = Depends(get_db)):
 # PATCH
 
 
-@router.patch("/products/{product_id}")
+@router.patch("/products/{product_id}", response_model=ProductResponseSchema)
 def update_product(
     product_id: int, data: ProductUpdateSchema, db: Session = Depends(get_db)
 ):
@@ -49,7 +53,7 @@ def update_product(
 # DELETE
 
 
-@router.delete("/products/{product_id}")
+@router.delete("/products/{product_id}", response_model=ProductResponseSchema)
 def delete_product(product_id: int, db: Session = Depends(get_db)):
     try:
         return ProductService.delete_product(db, product_id)

@@ -13,3 +13,11 @@ class ProductCreateSchema(ProductBaseSchema):
 class ProductUpdateSchema(ProductBaseSchema):
     name: str | None = Field(max_length=100, default=None)
     price: float | None = Field(gt=0, default=None)
+
+
+class ProductResponseSchema(BaseModel):
+    id: int
+    name: str
+    price: float
+
+    model_config = {"from_attributes": True}

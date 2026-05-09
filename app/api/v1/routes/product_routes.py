@@ -9,7 +9,7 @@ from app.api.v1.schemas.product_schema import (
 from app.application.services.product_service import ProductService
 from app.infrastructure.database.database import get_db
 
-router = APIRouter(prefix="/products", tags=["Products"])
+router = APIRouter(tags=["Products"])
 
 
 # GET

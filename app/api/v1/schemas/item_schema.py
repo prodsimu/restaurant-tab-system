@@ -9,3 +9,12 @@ class ItemBaseSchema(BaseModel):
 
 class ItemCreateSchema(ItemBaseSchema):
     pass
+
+
+class ItemResponseSchema(BaseModel):
+    id: int
+    tab_number: int
+    product_id: int
+    quantity: int
+
+    model_config = {"from_attributes": True}

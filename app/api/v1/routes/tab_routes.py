@@ -11,7 +11,7 @@ router = APIRouter(tags=["Tabs"])
 # GET
 
 
-@router.get("/tabs/{number}", response_model=TabResponseSchema)
+@router.get("/tabs/{number}", response_model=list[TabResponseSchema])
 def list_tabs_by_number(number: int, db: Session = Depends(get_db)):
 
     try:

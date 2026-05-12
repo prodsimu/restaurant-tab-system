@@ -32,6 +32,13 @@ def add_item_to_tab(data: ItemCreateSchema, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-# PUT
-
 # DELETE
+
+
+@router.delete("/items/{item_id}")
+def delete_item_from_tab(item_id: int, db: Session = Depends(get_db)):
+    try:
+        return ItemService.delete_item_from_tab(db, item_id)
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

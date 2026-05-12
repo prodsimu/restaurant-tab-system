@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.api.v1.schemas.item_schema import ItemCreateSchema
 from app.domain.entities.item_entity import ItemCreateEntity
+from app.domain.exceptions.product_exceptions import ProductNotFoundError
 from app.domain.exceptions.tab_exceptions import TabNotFoundError
 from app.infrastructure.database.models.item_model import ItemModel
 from app.infrastructure.database.models.product_model import ProductModel
@@ -30,7 +31,7 @@ class ItemService:
         )
 
         if not product:
-            raise ValueError("Product not found")
+            raise ProductNotFoundError("Product not found")
 
         item = (
             db.query(ItemModel)
@@ -64,6 +65,21 @@ class ItemService:
         return db_model
 
     # READ
+
+    @staticmethod
+    def list_tab_items(db: Session, tab_number: int):
+        tab = (
+            db.query(TabModel)
+            .filter(and_(TabModel.number == tab_number, TabModel.is_open))
+            .first()
+        )
+
+        if not tab:
+            raise TabNotFoundError("Tab is not open")
+
+        items = db.query(ItemModel).filter(ItemModel.tab_id == tab.id).all()
+
+        return items
 
     # UPDATE
 

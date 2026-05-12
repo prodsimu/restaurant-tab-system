@@ -9,6 +9,16 @@ router = APIRouter(tags=["Items"])
 
 # GET
 
+
+@router.get("/items/{tab_number}", response_model=list[ItemResponseSchema])
+def list_tab_items(tab_number: int, db: Session = Depends(get_db)):
+    try:
+        return ItemService.list_tab_items(db, tab_number)
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 # POST
 
 
@@ -18,7 +28,7 @@ def add_item_to_tab(data: ItemCreateSchema, db: Session = Depends(get_db)):
 
         return ItemService.add_item_to_tab(db, data)
 
-    except ValueError as e:
+    except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 

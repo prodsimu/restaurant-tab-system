@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.api.v1.schemas.item_schema import ItemCreateSchema
 from app.domain.entities.item_entity import ItemCreateEntity
+from app.domain.exceptions.item_exceptions import ItemNotFoundError
 from app.domain.exceptions.product_exceptions import ProductNotFoundError
 from app.domain.exceptions.tab_exceptions import TabNotFoundError
 from app.infrastructure.database.models.item_model import ItemModel
@@ -84,3 +85,15 @@ class ItemService:
     # UPDATE
 
     # DELETE
+
+    @staticmethod
+    def delete_item_from_tab(db: Session, item_id: int):
+        item = db.query(ItemModel).filter(ItemModel.id == item_id).first()
+
+        if not item:
+            raise ItemNotFoundError(f"Item with ID {item_id} not found")
+
+        db.delete(item)
+        db.commit()
+
+        return {"message": f"Item with ID {item_id} deleted successfully"}

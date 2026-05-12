@@ -16,7 +16,7 @@ class ItemService:
     # CREATE
 
     @staticmethod
-    def add_item_to_tab(db: Session, data: ItemCreateSchema):
+    def add_item_to_tab(db: Session, data: ItemCreateSchema) -> ItemModel:
 
         tab = (
             db.query(TabModel)
@@ -68,7 +68,7 @@ class ItemService:
     # READ
 
     @staticmethod
-    def list_tab_items(db: Session, tab_number: int):
+    def list_tab_items(db: Session, tab_number: int) -> list[ItemModel]:
         tab = (
             db.query(TabModel)
             .filter(and_(TabModel.number == tab_number, TabModel.is_open))
@@ -82,12 +82,10 @@ class ItemService:
 
         return items
 
-    # UPDATE
-
     # DELETE
 
     @staticmethod
-    def delete_item_from_tab(db: Session, item_id: int):
+    def delete_item_from_tab(db: Session, item_id: int) -> dict:
         item = db.query(ItemModel).filter(ItemModel.id == item_id).first()
 
         if not item:

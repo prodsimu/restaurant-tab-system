@@ -13,7 +13,7 @@ class ItemCreateSchema(ItemBaseSchema):
 
 class ItemResponseSchema(BaseModel):
     id: int
-    tab_number: int
+    tab_id: int
     product_id: int
     quantity: int
 

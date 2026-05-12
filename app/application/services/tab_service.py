@@ -81,7 +81,7 @@ class TabService:
     # DELETE
 
     @staticmethod
-    def delete_tab_by_id(db: Session, id: int) -> TabModel:
+    def delete_tab_by_id(db: Session, id: int) -> dict:
 
         tab = db.query(TabModel).filter(and_(TabModel.id == id)).first()
 
@@ -91,4 +91,4 @@ class TabService:
         db.delete(tab)
         db.commit()
 
-        return tab
+        return {"message": f"Tab with ID {id} deleted successfully"}

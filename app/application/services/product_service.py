@@ -11,7 +11,7 @@ class ProductService:
     # CREATE
 
     @staticmethod
-    def create_product(db: Session, data: ProductCreateSchema):
+    def create_product(db: Session, data: ProductCreateSchema) -> ProductModel:
 
         entity = ProductCreateEntity(**data.dict())
 
@@ -26,7 +26,7 @@ class ProductService:
     # READ
 
     @staticmethod
-    def get_product_by_id(db: Session, product_id: int):
+    def get_product_by_id(db: Session, product_id: int) -> ProductModel:
         product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
 
         if not product:
@@ -37,7 +37,9 @@ class ProductService:
     # UPDATE
 
     @staticmethod
-    def update_product(product_id: int, db: Session, data: ProductUpdateSchema):
+    def update_product(
+        product_id: int, db: Session, data: ProductUpdateSchema
+    ) -> ProductModel:
         product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
 
         if not product:
@@ -56,7 +58,7 @@ class ProductService:
     # DELETE
 
     @staticmethod
-    def delete_product(db: Session, product_id: int):
+    def delete_product(db: Session, product_id: int) -> dict:
         product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
 
         if not product:
@@ -65,4 +67,4 @@ class ProductService:
         db.delete(product)
         db.commit()
 
-        return product
+        return {"message": f"Product with id {product_id} has been deleted"}

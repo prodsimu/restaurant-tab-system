@@ -9,7 +9,7 @@ class ItemBaseEntity:
     product_id: int
     quantity: int
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.validate()
 
     def validate(self) -> None:

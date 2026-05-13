@@ -11,7 +11,9 @@ router = APIRouter(tags=["Items"])
 
 
 @router.get("/items/{tab_number}", response_model=list[ItemResponseSchema])
-def list_tab_items(tab_number: int, db: Session = Depends(get_db)):
+def list_tab_items(
+    tab_number: int, db: Session = Depends(get_db)
+) -> list[ItemResponseSchema]:
     try:
         return ItemService.list_tab_items(db, tab_number)
 
@@ -23,7 +25,9 @@ def list_tab_items(tab_number: int, db: Session = Depends(get_db)):
 
 
 @router.post("/items", response_model=ItemResponseSchema)
-def add_item_to_tab(data: ItemCreateSchema, db: Session = Depends(get_db)):
+def add_item_to_tab(
+    data: ItemCreateSchema, db: Session = Depends(get_db)
+) -> ItemResponseSchema:
     try:
 
         return ItemService.add_item_to_tab(db, data)
@@ -36,7 +40,7 @@ def add_item_to_tab(data: ItemCreateSchema, db: Session = Depends(get_db)):
 
 
 @router.delete("/items/{item_id}")
-def delete_item_from_tab(item_id: int, db: Session = Depends(get_db)):
+def delete_item_from_tab(item_id: int, db: Session = Depends(get_db)) -> dict[str, str]:
     try:
         return ItemService.delete_item_from_tab(db, item_id)
 

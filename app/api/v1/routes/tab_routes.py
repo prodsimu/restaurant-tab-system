@@ -12,13 +12,13 @@ router = APIRouter(tags=["Tabs"])
 
 
 @router.get("/tabs/{number}", response_model=list[TabResponseSchema])
-def list_tabs_by_number(number: int, db: Session = Depends(get_db)):
+def list_tabs_by_number(
+    number: int, db: Session = Depends(get_db)
+) -> list[TabResponseSchema]:
 
     try:
 
-        tabs = TabService.list_tabs_by_number(db, number)
-
-        return tabs
+        return TabService.list_tabs_by_number(db, number)
 
     except Exception as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -28,12 +28,10 @@ def list_tabs_by_number(number: int, db: Session = Depends(get_db)):
 
 
 @router.post("/tabs/{number}", response_model=TabResponseSchema)
-def open_tab_by_number(number: int, db: Session = Depends(get_db)):
+def open_tab_by_number(number: int, db: Session = Depends(get_db)) -> TabResponseSchema:
     try:
 
-        tab = TabService.open_tab_by_number(db, number)
-
-        return tab
+        return TabService.open_tab_by_number(db, number)
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -43,11 +41,11 @@ def open_tab_by_number(number: int, db: Session = Depends(get_db)):
 
 
 @router.put("/tabs/{number}", response_model=TabResponseSchema)
-def close_tab_by_number(number: int, db: Session = Depends(get_db)):
+def close_tab_by_number(
+    number: int, db: Session = Depends(get_db)
+) -> TabResponseSchema:
     try:
-        tab = TabService.close_tab_by_number(db, number)
-
-        return tab
+        return TabService.close_tab_by_number(db, number)
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -57,11 +55,9 @@ def close_tab_by_number(number: int, db: Session = Depends(get_db)):
 
 
 @router.delete("/tabs/{id}", response_model=TabResponseSchema)
-def delete_tab_by_id(id: int, db: Session = Depends(get_db)):
+def delete_tab_by_id(id: int, db: Session = Depends(get_db)) -> TabResponseSchema:
     try:
-        tab = TabService.delete_tab_by_id(db, id)
-
-        return tab
+        return TabService.delete_tab_by_id(db, id)
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

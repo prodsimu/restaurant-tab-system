@@ -16,7 +16,9 @@ router = APIRouter(tags=["Products"])
 
 
 @router.get("/products/{product_id}", response_model=ProductResponseSchema)
-def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
+def get_product_by_id(
+    product_id: int, db: Session = Depends(get_db)
+) -> ProductResponseSchema:
     try:
         return ProductService.get_product_by_id(db, product_id)
 
@@ -28,7 +30,9 @@ def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/products", response_model=ProductResponseSchema)
-def create_product(data: ProductCreateSchema, db: Session = Depends(get_db)):
+def create_product(
+    data: ProductCreateSchema, db: Session = Depends(get_db)
+) -> ProductResponseSchema:
     try:
         return ProductService.create_product(db, data)
 
@@ -42,7 +46,7 @@ def create_product(data: ProductCreateSchema, db: Session = Depends(get_db)):
 @router.patch("/products/{product_id}", response_model=ProductResponseSchema)
 def update_product(
     product_id: int, data: ProductUpdateSchema, db: Session = Depends(get_db)
-):
+) -> ProductResponseSchema:
     try:
         return ProductService.update_product(product_id, db, data)
 
@@ -54,7 +58,9 @@ def update_product(
 
 
 @router.delete("/products/{product_id}", response_model=ProductResponseSchema)
-def delete_product(product_id: int, db: Session = Depends(get_db)):
+def delete_product(
+    product_id: int, db: Session = Depends(get_db)
+) -> ProductResponseSchema:
     try:
         return ProductService.delete_product(db, product_id)
 

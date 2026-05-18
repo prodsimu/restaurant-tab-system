@@ -38,7 +38,7 @@ class ProductService:
 
     @staticmethod
     def update_product(
-        product_id: int, db: Session, data: ProductUpdateSchema
+        db: Session, product_id: int, data: ProductUpdateSchema
     ) -> ProductModel:
         product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
 

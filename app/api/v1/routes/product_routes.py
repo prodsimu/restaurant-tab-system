@@ -48,7 +48,7 @@ def update_product(
     product_id: int, data: ProductUpdateSchema, db: Session = Depends(get_db)
 ) -> ProductResponseSchema:
     try:
-        return ProductService.update_product(product_id, db, data)
+        return ProductService.update_product(db, product_id, data)
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

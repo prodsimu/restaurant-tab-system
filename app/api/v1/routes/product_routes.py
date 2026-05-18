@@ -57,10 +57,8 @@ def update_product(
 # DELETE
 
 
-@router.delete("/products/{product_id}", response_model=ProductResponseSchema)
-def delete_product(
-    product_id: int, db: Session = Depends(get_db)
-) -> ProductResponseSchema:
+@router.delete("/products/{product_id}")
+def delete_product(product_id: int, db: Session = Depends(get_db)) -> dict:
     try:
         return ProductService.delete_product(db, product_id)
 

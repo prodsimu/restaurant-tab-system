@@ -7,10 +7,13 @@ from app.infrastructure.database.database import Base, engine
 from app.infrastructure.database.models.item_model import ItemModel
 from app.infrastructure.database.models.product_model import ProductModel
 from app.infrastructure.database.models.tab_model import TabModel
+from app.infrastructure.http.exception_handlers import register_exception_handlers
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+register_exception_handlers(app)
 
 app.include_router(product_router)
 app.include_router(tab_router)

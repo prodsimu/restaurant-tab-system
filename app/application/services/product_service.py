@@ -26,6 +26,10 @@ class ProductService:
     # READ
 
     @staticmethod
+    def list_all_products(db: Session) -> list[ProductModel]:
+        return db.query(ProductModel).all()
+
+    @staticmethod
     def get_product_by_id(db: Session, product_id: int) -> ProductModel:
         product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
 

@@ -26,7 +26,9 @@ class TabService:
         )
 
         if tab:
-            raise TabAlreadyOpenError("An open tab with this number already exists.")
+            raise TabAlreadyOpenError(
+                f"An open tab with number {number} already exists."
+            )
 
         entity = TabCreateEntity(number, True, datetime.now(timezone.utc), None)
 
@@ -52,7 +54,7 @@ class TabService:
         tabs = db.query(TabModel).filter(TabModel.number == number).all()
 
         if not tabs:
-            raise TabNotFoundError("Tabs not found.")
+            raise TabNotFoundError(f"Tabs with number {number} not found.")
 
         return tabs
 
@@ -68,7 +70,7 @@ class TabService:
         )
 
         if not tab:
-            raise TabAlreadyClosedError("No open tab with this number exists.")
+            raise TabAlreadyClosedError(f"No open tab with number {number} exists.")
 
         tab.is_open = False
         tab.closed_at = datetime.now(timezone.utc)
@@ -86,7 +88,7 @@ class TabService:
         tab = db.query(TabModel).filter(and_(TabModel.id == id)).first()
 
         if not tab:
-            raise TabNotFoundError("Tab not found.")
+            raise TabNotFoundError(f"Tab with ID {id} not found.")
 
         db.delete(tab)
         db.commit()

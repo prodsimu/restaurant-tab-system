@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.api.v1.schemas.item_schema import ItemCreateSchema, ItemResponseSchema
@@ -14,11 +14,7 @@ router = APIRouter(tags=["Items"])
 def list_tab_items(
     tab_number: int, db: Session = Depends(get_db)
 ) -> list[ItemResponseSchema]:
-    try:
-        return ItemService.list_tab_items(db, tab_number)
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    return ItemService.list_tab_items(db, tab_number)
 
 
 # POST
@@ -28,12 +24,7 @@ def list_tab_items(
 def add_item_to_tab(
     data: ItemCreateSchema, db: Session = Depends(get_db)
 ) -> ItemResponseSchema:
-    try:
-
-        return ItemService.add_item_to_tab(db, data)
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    return ItemService.add_item_to_tab(db, data)
 
 
 # DELETE
@@ -41,8 +32,4 @@ def add_item_to_tab(
 
 @router.delete("/items/{item_id}")
 def delete_item_from_tab(item_id: int, db: Session = Depends(get_db)) -> dict[str, str]:
-    try:
-        return ItemService.delete_item_from_tab(db, item_id)
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    return ItemService.delete_item_from_tab(db, item_id)

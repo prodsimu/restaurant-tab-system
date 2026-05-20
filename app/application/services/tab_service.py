@@ -50,6 +50,10 @@ class TabService:
     # READ
 
     @staticmethod
+    def list_all_tabs(db: Session) -> list[TabModel]:
+        return db.query(TabModel).all()
+
+    @staticmethod
     def list_tabs_by_number(db: Session, number: int) -> TabModel:
         tabs = db.query(TabModel).filter(TabModel.number == number).all()
 

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.api.v1.schemas.tab_schema import TabResponseSchema
@@ -15,13 +15,7 @@ router = APIRouter(tags=["Tabs"])
 def list_tabs_by_number(
     number: int, db: Session = Depends(get_db)
 ) -> list[TabResponseSchema]:
-
-    try:
-
-        return TabService.list_tabs_by_number(db, number)
-
-    except Exception as e:
-        raise HTTPException(status_code=404, detail=str(e))
+    return TabService.list_tabs_by_number(db, number)
 
 
 # POST
@@ -29,12 +23,7 @@ def list_tabs_by_number(
 
 @router.post("/tabs/{number}", response_model=TabResponseSchema)
 def open_tab_by_number(number: int, db: Session = Depends(get_db)) -> TabResponseSchema:
-    try:
-
-        return TabService.open_tab_by_number(db, number)
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    return TabService.open_tab_by_number(db, number)
 
 
 # PUT
@@ -44,11 +33,7 @@ def open_tab_by_number(number: int, db: Session = Depends(get_db)) -> TabRespons
 def close_tab_by_number(
     number: int, db: Session = Depends(get_db)
 ) -> TabResponseSchema:
-    try:
-        return TabService.close_tab_by_number(db, number)
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    return TabService.close_tab_by_number(db, number)
 
 
 # DELETE
@@ -56,8 +41,4 @@ def close_tab_by_number(
 
 @router.delete("/tabs/{id}", response_model=TabResponseSchema)
 def delete_tab_by_id(id: int, db: Session = Depends(get_db)) -> TabResponseSchema:
-    try:
-        return TabService.delete_tab_by_id(db, id)
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    return TabService.delete_tab_by_id(db, id)

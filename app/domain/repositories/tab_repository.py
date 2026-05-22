@@ -13,3 +13,6 @@ class TabRepositoryInterface(ABC):
 
     @abstractmethod
     def list_tabs_by_number(self, number: int) -> list[TabModel]: ...
+
+    @abstractmethod
+    def list_open_tabs(self) -> list[TabModel]: ...

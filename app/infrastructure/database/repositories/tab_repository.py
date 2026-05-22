@@ -22,3 +22,6 @@ class TabRepository(TabRepositoryInterface):
 
     def list_tabs_by_number(self, number: int) -> list[TabModel]:
         return self.db.query(TabModel).filter(TabModel.number == number).all()
+
+    def list_open_tabs(self) -> list[TabModel]:
+        return self.db.query(TabModel).filter(TabModel.is_open).all()

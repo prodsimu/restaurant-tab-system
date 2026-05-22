@@ -26,3 +26,8 @@ class TabRepositoryInterface(ABC):
 
     @abstractmethod
     def list_open_tabs(self) -> list[TabModel]: ...
+
+    # UPDATE
+
+    @abstractmethod
+    def close_tab_by_number(self, number: int, closed_at: datetime) -> TabModel: ...

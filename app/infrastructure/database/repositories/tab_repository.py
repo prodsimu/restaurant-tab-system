@@ -46,3 +46,19 @@ class TabRepository(TabRepositoryInterface):
 
     def list_open_tabs(self) -> list[TabModel]:
         return self.db.query(TabModel).filter(TabModel.is_open).all()
+
+    # UPDATE
+
+    def close_tab_by_number(self, number: int, closed_at: datetime) -> TabModel:
+        tab = self.get_open_tab_by_number(number)
+
+        if not tab:
+            return None
+
+        tab.is_open = False
+        tab.closed_at = closed_at
+
+        self.db.commit()
+        self.db.refresh(tab)
+
+        return tab

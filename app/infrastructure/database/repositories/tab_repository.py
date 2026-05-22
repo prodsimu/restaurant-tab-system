@@ -8,9 +8,14 @@ class TabRepository(TabRepositoryInterface):
     def __init__(self, db: Session):
         self.db = db
 
+    # READ
+
     def get_open_tab_by_number(self, tab_number: int) -> TabModel:
         return (
             self.db.query(TabModel)
             .filter(TabModel.number == tab_number, TabModel.is_open)
             .first()
         )
+
+    def list_all_tabs(self) -> list[TabModel]:
+        return self.db.query(TabModel).all()

@@ -62,3 +62,16 @@ class TabRepository(TabRepositoryInterface):
         self.db.refresh(tab)
 
         return tab
+
+    # DELETE
+
+    def delete_tab_by_id(self, id: int) -> bool:
+        tab = self.db.query(TabModel).filter(TabModel.id == id).first()
+
+        if not tab:
+            return False
+
+        self.db.delete(tab)
+        self.db.commit()
+
+        return True

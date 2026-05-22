@@ -31,3 +31,8 @@ class TabRepositoryInterface(ABC):
 
     @abstractmethod
     def close_tab_by_number(self, number: int, closed_at: datetime) -> TabModel: ...
+
+    # DELETE
+
+    @abstractmethod
+    def delete_tab_by_id(self, id: int) -> bool: ...

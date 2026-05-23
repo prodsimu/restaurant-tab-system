@@ -11,6 +11,9 @@ class TabCreateEntity:
     created_at: datetime = datetime.now(timezone.utc)
     closed_at: None = None
 
+    def __post_init__(self):
+        self.validate()
+
     def validate(self) -> None:
         self.number = BaseValidator.validate_positive_int(self.number, "number")
         self.is_open = BaseValidator.validate_boolean(self.is_open, "is_open")

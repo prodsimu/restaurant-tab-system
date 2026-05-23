@@ -31,6 +31,9 @@ class TabRepository(TabRepositoryInterface):
 
     # READ
 
+    def get_tab_by_id(self, id: int) -> TabModel:
+        return self.db.query(TabModel).filter(TabModel.id == id).first()
+
     def get_open_tab_by_number(self, tab_number: int) -> TabModel:
         return (
             self.db.query(TabModel)

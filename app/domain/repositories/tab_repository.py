@@ -16,6 +16,9 @@ class TabRepositoryInterface(ABC):
     # READ
 
     @abstractmethod
+    def get_tab_by_id(self, id: int) -> TabModel: ...
+
+    @abstractmethod
     def get_open_tab_by_number(self, tab_number: int) -> TabModel: ...
 
     @abstractmethod

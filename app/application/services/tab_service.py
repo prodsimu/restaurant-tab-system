@@ -1,8 +1,5 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import and_
-from sqlalchemy.orm import Session
-
 from app.domain.entities.tab_entity import TabCreateEntity
 from app.domain.exceptions.tab_exceptions import (
     TabAlreadyClosedError,
@@ -10,52 +7,48 @@ from app.domain.exceptions.tab_exceptions import (
     TabNotFoundError,
 )
 from app.infrastructure.database.models.tab_model import TabModel
+from app.infrastructure.database.repositories.tab_repository import TabRepository
 
 
 class TabService:
 
+    def __init__(self, repo: TabRepository):
+        self.repo = repo
+
     # CREATE
 
-    @staticmethod
-    def open_tab_by_number(db: Session, number: int) -> TabModel:
+    def open_tab_by_number(self, number: int) -> TabModel:
 
-        tab = (
-            db.query(TabModel)
-            .filter(and_(TabModel.number == number, TabModel.is_open))
-            .first()
-        )
+        open_tab = self.repo.get_open_tab_by_number(number)
 
-        if tab:
+        if open_tab:
             raise TabAlreadyOpenError(
                 f"An open tab with number {number} already exists."
             )
 
         entity = TabCreateEntity(number, True, datetime.now(timezone.utc), None)
 
-        entity.validate()
-
-        db_model = TabModel(
+        tab = self.repo.open_tab_by_number(
             number=entity.number,
             is_open=entity.is_open,
             created_at=entity.created_at,
             closed_at=entity.closed_at,
         )
 
-        db.add(db_model)
-        db.commit()
-        db.refresh(db_model)
-
-        return db_model
+        return tab
 
     # READ
 
-    @staticmethod
-    def list_all_tabs(db: Session) -> list[TabModel]:
-        return db.query(TabModel).all()
+    def list_all_tabs(self) -> list[TabModel]:
+        tabs = self.repo.list_all_tabs()
 
-    @staticmethod
-    def list_tabs_by_number(db: Session, number: int) -> TabModel:
-        tabs = db.query(TabModel).filter(TabModel.number == number).all()
+        if not tabs:
+            raise TabNotFoundError("No tabs found.")
+
+        return tabs
+
+    def list_tabs_by_number(self, number: int) -> TabModel:
+        tabs = self.repo.list_tabs_by_number(number)
 
         if not tabs:
             raise TabNotFoundError(f"Tabs with number {number} not found.")
@@ -64,37 +57,24 @@ class TabService:
 
     # UPDATE
 
-    @staticmethod
-    def close_tab_by_number(db: Session, number: int) -> TabModel:
+    def close_tab_by_number(self, number: int) -> TabModel:
 
-        tab = (
-            db.query(TabModel)
-            .filter(and_(TabModel.number == number, TabModel.is_open))
-            .first()
-        )
+        tab = self.repo.get_open_tab_by_number(number)
 
         if not tab:
             raise TabAlreadyClosedError(f"No open tab with number {number} exists.")
 
-        tab.is_open = False
-        tab.closed_at = datetime.now(timezone.utc)
+        closed_tab = self.repo.close_tab_by_number(number, datetime.now(timezone.utc))
 
-        db.commit()
-        db.refresh(tab)
-
-        return tab
+        return closed_tab
 
     # DELETE
 
-    @staticmethod
-    def delete_tab_by_id(db: Session, id: int) -> dict:
+    def delete_tab_by_id(self, id: int) -> dict:
 
-        tab = db.query(TabModel).filter(and_(TabModel.id == id)).first()
+        deleted_tab = self.repo.delete_tab_by_id(id)
 
-        if not tab:
+        if not deleted_tab:
             raise TabNotFoundError(f"Tab with ID {id} not found.")
-
-        db.delete(tab)
-        db.commit()
 
         return {"message": f"Tab with ID {id} deleted successfully"}

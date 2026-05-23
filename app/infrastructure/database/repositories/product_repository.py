@@ -5,8 +5,11 @@ from app.infrastructure.database.models.product_model import ProductModel
 
 
 class ProductRepository(ProductRepositoryInterface):
+
     def __init__(self, db: Session):
         self.db = db
+
+    # CREATE
 
     def create_product(self, name: str, price: float) -> ProductModel:
         db_model = ProductModel(name=name, price=price)
@@ -16,3 +19,12 @@ class ProductRepository(ProductRepositoryInterface):
         self.db.refresh(db_model)
 
         return db_model
+
+    # READ
+
+    def list_all_products(self) -> list[ProductModel]:
+        return self.db.query(ProductModel).all()
+
+    # UPDATE
+
+    # DELETE

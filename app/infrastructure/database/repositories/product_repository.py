@@ -25,6 +25,9 @@ class ProductRepository(ProductRepositoryInterface):
     def list_all_products(self) -> list[ProductModel]:
         return self.db.query(ProductModel).all()
 
+    def get_product_by_id(self, product_id: int) -> ProductModel:
+        return self.db.query(ProductModel).filter(ProductModel.id == product_id).first()
+
     # UPDATE
 
     # DELETE

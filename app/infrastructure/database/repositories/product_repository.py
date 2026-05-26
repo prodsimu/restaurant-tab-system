@@ -46,3 +46,14 @@ class ProductRepository(ProductRepositoryInterface):
         return product
 
     # DELETE
+
+    def delete_product(self, product_id: int) -> dict:
+        product = self.get_product_by_id(product_id)
+
+        if not product:
+            return False
+
+        self.db.delete(product)
+        self.db.commit()
+
+        return True

@@ -26,3 +26,6 @@ class ProductRepositoryInterface(ABC):
     ) -> ProductModel: ...
 
     # DELETE
+
+    @abstractmethod
+    def delete_product(self, product_id: int) -> dict: ...

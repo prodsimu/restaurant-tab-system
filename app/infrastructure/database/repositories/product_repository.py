@@ -30,16 +30,15 @@ class ProductRepository(ProductRepositoryInterface):
 
     # UPDATE
 
-    def update_product(self, product_id: int, data: dict) -> ProductModel:
+    def update_product(self, product_id: int, name: str, price: float) -> ProductModel:
 
         product = self.get_product_by_id(product_id)
 
         if not product:
             return None
 
-        for key, value in data.items():
-            if hasattr(product, key):
-                setattr(product, key, value)
+        product.name = name
+        product.price = price
 
         self.db.commit()
         self.db.refresh(product)

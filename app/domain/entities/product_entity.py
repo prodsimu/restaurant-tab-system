@@ -32,4 +32,8 @@ class ProductCreateEntity(ProductBaseEntity):
 
 @dataclass
 class ProductUpdateEntity(ProductBaseEntity):
-    pass
+    def validate(self) -> None:
+        if self.name is not None:
+            self.name = BaseValidator.validate_string(self.name, "name")
+        if self.price is not None:
+            self.price = BaseValidator.validate_positive_float(self.price, "price")

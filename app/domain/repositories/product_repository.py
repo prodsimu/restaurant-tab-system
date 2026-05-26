@@ -15,8 +15,12 @@ class ProductRepositoryInterface(ABC):
     @abstractmethod
     def list_all_products(self) -> list[ProductModel]: ...
 
+    @abstractmethod
     def get_product_by_id(self, product_id: int) -> ProductModel: ...
 
     # UPDATE
+
+    @abstractmethod
+    def update_product(self, product_id: int, data: dict) -> ProductModel: ...
 
     # DELETE

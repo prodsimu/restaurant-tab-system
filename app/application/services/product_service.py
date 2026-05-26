@@ -1,37 +1,32 @@
-from sqlalchemy.orm import Session
-
 from app.api.v1.schemas.product_schema import ProductCreateSchema, ProductUpdateSchema
 from app.domain.entities.product_entity import ProductCreateEntity, ProductUpdateEntity
 from app.domain.exceptions.product_exceptions import ProductNotFoundError
 from app.infrastructure.database.models.product_model import ProductModel
+from app.infrastructure.database.repositories.product_repository import (
+    ProductRepository,
+)
 
 
 class ProductService:
 
+    def __init__(self, repo: ProductRepository):
+        self.repo = repo
+
     # CREATE
 
-    @staticmethod
-    def create_product(db: Session, data: ProductCreateSchema) -> ProductModel:
+    def create_product(self, data: ProductCreateSchema) -> ProductModel:
 
         entity = ProductCreateEntity(**data.dict())
 
-        db_model = ProductModel(name=entity.name, price=entity.price)
-
-        db.add(db_model)
-        db.commit()
-        db.refresh(db_model)
-
-        return db_model
+        return self.repo.create_product(name=entity.name, price=entity.price)
 
     # READ
 
-    @staticmethod
-    def list_all_products(db: Session) -> list[ProductModel]:
-        return db.query(ProductModel).all()
+    def list_all_products(self) -> list[ProductModel]:
+        return self.repo.list_all_products()
 
-    @staticmethod
-    def get_product_by_id(db: Session, product_id: int) -> ProductModel:
-        product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+    def get_product_by_id(self, product_id: int) -> ProductModel:
+        product = self.repo.get_product_by_id(product_id)
 
         if not product:
             raise ProductNotFoundError(f"Product with id {product_id} not found")
@@ -40,35 +35,29 @@ class ProductService:
 
     # UPDATE
 
-    @staticmethod
     def update_product(
-        db: Session, product_id: int, data: ProductUpdateSchema
+        self, product_id: int, data: ProductUpdateSchema
     ) -> ProductModel:
-        product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
-
-        if not product:
-            raise ProductNotFoundError(f"Product with id {product_id} not found")
 
         entity = ProductUpdateEntity(**data.dict())
 
-        for key, value in entity.__dict__.items():
-            setattr(product, key, value)
+        updated_product = self.repo.update_product(
+            product_id, entity.name, entity.price
+        )
 
-        db.commit()
-        db.refresh(product)
+        if not updated_product:
+            raise ProductNotFoundError(f"Product with id {product_id} not found")
 
-        return product
+        return updated_product
 
     # DELETE
 
     @staticmethod
-    def delete_product(db: Session, product_id: int) -> dict:
-        product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+    def delete_product(self, product_id: int) -> dict:
 
-        if not product:
+        deleted_product = self.repo.delete_product(product_id)
+
+        if not deleted_product:
             raise ProductNotFoundError(f"Product with id {product_id} not found")
 
-        db.delete(product)
-        db.commit()
-
-        return {"message": f"Product with id {product_id} has been deleted"}
+        return {"message": f"Product with id {product_id} deleted successfully."}

@@ -41,9 +41,16 @@ class ProductService:
 
         entity = ProductUpdateEntity(**data.dict())
 
-        updated_product = self.repo.update_product(
-            product_id, entity.name, entity.price
-        )
+        update_data = {
+            k: v
+            for k, v in {
+                "name": entity.name,
+                "price": entity.price,
+            }.items()
+            if v is not None
+        }
+
+        updated_product = self.repo.update_product(product_id, update_data)
 
         if not updated_product:
             raise ProductNotFoundError(f"Product with id {product_id} not found")
@@ -52,7 +59,6 @@ class ProductService:
 
     # DELETE
 
-    @staticmethod
     def delete_product(self, product_id: int) -> dict:
 
         deleted_product = self.repo.delete_product(product_id)

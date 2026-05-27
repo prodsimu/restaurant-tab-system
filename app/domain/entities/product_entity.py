@@ -31,9 +31,26 @@ class ProductCreateEntity(ProductBaseEntity):
 
 
 @dataclass
-class ProductUpdateEntity(ProductBaseEntity):
+class ProductUpdateEntity:
+    name: str | None = None
+    price: float | None = None
+
+    def __post_init__(self):
+        self.validate()
+        self.normalize()
+
     def validate(self) -> None:
         if self.name is not None:
             self.name = BaseValidator.validate_string(self.name, "name")
+
         if self.price is not None:
             self.price = BaseValidator.validate_positive_float(self.price, "price")
+
+    def normalize(self) -> None:
+        if self.name is None:
+            return
+
+        self.name = unicodedata.normalize("NFKD", self.name)
+        self.name = self.name.encode("ASCII", "ignore").decode("utf-8")
+        self.name = self.name.lower()
+        self.name = re.sub(r"[^a-z0-9]+", "-", self.name).strip("-")

@@ -30,15 +30,14 @@ class ProductRepository(ProductRepositoryInterface):
 
     # UPDATE
 
-    def update_product(self, product_id: int, name: str, price: float) -> ProductModel:
-
+    def update_product(self, product_id: int, data: dict):
         product = self.get_product_by_id(product_id)
 
         if not product:
             return None
 
-        product.name = name
-        product.price = price
+        for key, value in data.items():
+            setattr(product, key, value)
 
         self.db.commit()
         self.db.refresh(product)
@@ -47,7 +46,7 @@ class ProductRepository(ProductRepositoryInterface):
 
     # DELETE
 
-    def delete_product(self, product_id: int) -> dict:
+    def delete_product(self, product_id: int) -> bool:
         product = self.get_product_by_id(product_id)
 
         if not product:

@@ -21,11 +21,9 @@ class ProductRepositoryInterface(ABC):
     # UPDATE
 
     @abstractmethod
-    def update_product(
-        self, product_id: int, name: str, price: float
-    ) -> ProductModel: ...
+    def update_product(self, product_id: int, data: dict) -> ProductModel: ...
 
     # DELETE
 
     @abstractmethod
-    def delete_product(self, product_id: int) -> dict: ...
+    def delete_product(self, product_id: int) -> bool: ...

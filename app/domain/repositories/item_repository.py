@@ -4,4 +4,6 @@ from app.infrastructure.database.models.item_model import ItemModel
 
 
 class ItemRepositoryInterface(ABC):
-    pass
+
+    @abstractmethod
+    def create_item(self, tab_id: int, product_id: int, quantity: int) -> ItemModel: ...

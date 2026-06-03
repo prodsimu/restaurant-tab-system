@@ -25,3 +25,8 @@ class ItemRepositoryInterface(ABC):
 
     @abstractmethod
     def decrement_quantity(self, item_id: int, quantity: int) -> ItemModel: ...
+
+    # DELETE
+
+    @abstractmethod
+    def delete_item(self, item_id: int) -> None: ...

@@ -46,3 +46,12 @@ class ItemRepository(ItemRepositoryInterface):
         self.db.refresh(item)
 
         return item
+
+    # DELETE
+
+    def delete_item(self, item_id: int) -> None:
+        item = self.get_item_by_id(item_id)
+
+        if item:
+            self.db.delete(item)
+            self.db.commit()

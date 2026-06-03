@@ -18,3 +18,8 @@ class ItemRepository(ItemRepositoryInterface):
         self.db.refresh(db_model)
 
         return db_model
+
+    # READ
+
+    def get_item_by_id(self, item_id: int) -> ItemModel:
+        return self.db.query(ItemModel).filter(ItemModel.id == item_id).first()

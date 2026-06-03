@@ -26,3 +26,23 @@ class ItemRepository(ItemRepositoryInterface):
 
     def list_items_by_tab_id(self, tab_id: int) -> list[ItemModel]:
         return self.db.query(ItemModel).filter(ItemModel.tab_id == tab_id).all()
+
+    # UPDATE
+
+    def increment_quantity(self, item_id: int, quantity: int) -> ItemModel:
+        item = self.get_item_by_id(item_id)
+        item.quantity += quantity
+
+        self.db.commit()
+        self.db.refresh(item)
+
+        return item
+
+    def decrement_quantity(self, item_id: int, quantity: int) -> ItemModel:
+        item = self.get_item_by_id(item_id)
+        item.quantity -= quantity
+
+        self.db.commit()
+        self.db.refresh(item)
+
+        return item

@@ -10,3 +10,6 @@ class ItemRepositoryInterface(ABC):
 
     @abstractmethod
     def get_item_by_id(self, item_id: int) -> ItemModel: ...
+
+    @abstractmethod
+    def list_items_by_tab_id(self, tab_id: int) -> list[ItemModel]: ...

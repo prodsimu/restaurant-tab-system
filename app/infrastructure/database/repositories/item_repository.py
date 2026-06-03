@@ -23,3 +23,6 @@ class ItemRepository(ItemRepositoryInterface):
 
     def get_item_by_id(self, item_id: int) -> ItemModel:
         return self.db.query(ItemModel).filter(ItemModel.id == item_id).first()
+
+    def list_items_by_tab_id(self, tab_id: int) -> list[ItemModel]:
+        return self.db.query(ItemModel).filter(ItemModel.tab_id == tab_id).all()

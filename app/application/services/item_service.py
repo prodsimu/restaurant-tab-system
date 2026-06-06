@@ -1,5 +1,4 @@
-from sqlalchemy import and_
-from sqlalchemy.orm import Session
+# app/application/services/item_service.py
 
 from app.api.v1.schemas.item_schema import ItemCreateSchema
 from app.domain.entities.item_entity import ItemCreateEntity
@@ -7,91 +6,63 @@ from app.domain.exceptions.item_exceptions import ItemNotFoundError
 from app.domain.exceptions.product_exceptions import ProductNotFoundError
 from app.domain.exceptions.tab_exceptions import TabNotFoundError
 from app.infrastructure.database.models.item_model import ItemModel
-from app.infrastructure.database.models.product_model import ProductModel
-from app.infrastructure.database.models.tab_model import TabModel
+from app.infrastructure.database.unit_of_work import UnitOfWork
 
 
 class ItemService:
 
+    def __init__(self, uow: UnitOfWork):
+        self.uow = uow
+
     # CREATE
 
-    @staticmethod
-    def add_item_to_tab(db: Session, data: ItemCreateSchema) -> ItemModel:
+    def add_item_to_tab(self, data: ItemCreateSchema) -> ItemModel:
+        with self.uow as uow:
+            tab = uow.tabs.get_open_tab_by_number(data.tab_number)
 
-        tab = (
-            db.query(TabModel)
-            .filter(and_(TabModel.number == data.tab_number, TabModel.is_open))
-            .first()
-        )
+            if not tab:
+                raise TabNotFoundError("Tab is not open")
 
-        if not tab:
-            raise TabNotFoundError("Tab is not open")
+            product = uow.products.get_product_by_id(data.product_id)
 
-        product = (
-            db.query(ProductModel).filter(ProductModel.id == data.product_id).first()
-        )
+            if not product:
+                raise ProductNotFoundError("Product not found")
 
-        if not product:
-            raise ProductNotFoundError("Product not found")
+            entity = ItemCreateEntity(tab.id, data.product_id, data.quantity)
 
-        item = (
-            db.query(ItemModel)
-            .filter(
-                and_(
-                    ItemModel.tab_id == tab.id,
-                    ItemModel.product_id == data.product_id,
-                )
+            item = uow.items.get_item_by_tab_and_product(
+                entity.tab_id, entity.product_id
             )
-            .first()
-        )
 
-        if item:
-            item.quantity += data.quantity
-            db.commit()
-            db.refresh(item)
-            return item
+            if item:
+                return uow.items.increment_quantity(item, entity.quantity)
 
-        entity = ItemCreateEntity(tab.id, data.product_id, data.quantity)
-
-        db_model = ItemModel(
-            tab_id=entity.tab_id,
-            product_id=entity.product_id,
-            quantity=entity.quantity,
-        )
-
-        db.add(db_model)
-        db.commit()
-        db.refresh(db_model)
-
-        return db_model
+            return uow.items.create_item(
+                tab_id=entity.tab_id,
+                product_id=entity.product_id,
+                quantity=entity.quantity,
+            )
 
     # READ
 
-    @staticmethod
-    def list_tab_items(db: Session, tab_number: int) -> list[ItemModel]:
-        tab = (
-            db.query(TabModel)
-            .filter(and_(TabModel.number == tab_number, TabModel.is_open))
-            .first()
-        )
+    def list_tab_items(self, tab_number: int) -> list[ItemModel]:
+        with self.uow as uow:
+            tab = uow.tabs.get_open_tab_by_number(tab_number)
 
-        if not tab:
-            raise TabNotFoundError("Tab is not open")
+            if not tab:
+                raise TabNotFoundError("Tab is not open")
 
-        items = db.query(ItemModel).filter(ItemModel.tab_id == tab.id).all()
-
-        return items
+            return uow.items.list_items_by_tab(tab.id)
 
     # DELETE
 
-    @staticmethod
-    def delete_item_from_tab(db: Session, item_id: int) -> dict:
-        item = db.query(ItemModel).filter(ItemModel.id == item_id).first()
+    def delete_item_from_tab(self, item_id: int) -> dict:
+        with self.uow as uow:
+            item = uow.items.get_item_by_id(item_id)
 
-        if not item:
-            raise ItemNotFoundError(f"Item with ID {item_id} not found")
+            if not item:
+                raise ItemNotFoundError(f"Item with ID {item_id} not found")
 
-        db.delete(item)
-        db.commit()
+            uow.items.delete_item(item)
 
         return {"message": f"Item with ID {item_id} deleted successfully"}

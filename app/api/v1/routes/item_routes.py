@@ -1,20 +1,32 @@
+# app/api/v1/routes/item_routes.py
+
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 
 from app.api.v1.schemas.item_schema import ItemCreateSchema, ItemResponseSchema
 from app.application.services.item_service import ItemService
-from app.infrastructure.database.database import get_db
+from app.infrastructure.database.database import SessionLocal
+from app.infrastructure.database.unit_of_work import UnitOfWork
 
 router = APIRouter(tags=["Items"])
+
+
+def get_unit_of_work() -> UnitOfWork:
+    return UnitOfWork(session_factory=SessionLocal)
+
+
+def get_item_service(uow: UnitOfWork = Depends(get_unit_of_work)) -> ItemService:
+    return ItemService(uow)
+
 
 # GET
 
 
 @router.get("/items/{tab_number}", response_model=list[ItemResponseSchema])
 def list_tab_items(
-    tab_number: int, db: Session = Depends(get_db)
+    tab_number: int,
+    service: ItemService = Depends(get_item_service),
 ) -> list[ItemResponseSchema]:
-    return ItemService.list_tab_items(db, tab_number)
+    return service.list_tab_items(tab_number)
 
 
 # POST
@@ -22,14 +34,18 @@ def list_tab_items(
 
 @router.post("/items", response_model=ItemResponseSchema)
 def add_item_to_tab(
-    data: ItemCreateSchema, db: Session = Depends(get_db)
+    data: ItemCreateSchema,
+    service: ItemService = Depends(get_item_service),
 ) -> ItemResponseSchema:
-    return ItemService.add_item_to_tab(db, data)
+    return service.add_item_to_tab(data)
 
 
 # DELETE
 
 
 @router.delete("/items/{item_id}")
-def delete_item_from_tab(item_id: int, db: Session = Depends(get_db)) -> dict[str, str]:
-    return ItemService.delete_item_from_tab(db, item_id)
+def delete_item_from_tab(
+    item_id: int,
+    service: ItemService = Depends(get_item_service),
+) -> dict[str, str]:
+    return service.delete_item_from_tab(item_id)

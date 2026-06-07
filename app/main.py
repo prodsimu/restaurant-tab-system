@@ -9,8 +9,6 @@ from app.infrastructure.database.models.product_model import ProductModel
 from app.infrastructure.database.models.tab_model import TabModel
 from app.infrastructure.http.exception_handlers import register_exception_handlers
 
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI()
 
 register_exception_handlers(app)

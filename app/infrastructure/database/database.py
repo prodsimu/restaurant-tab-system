@@ -3,13 +3,15 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 from app.core.settings import settings
 
-engine = create_engine(
-    settings.database_url,
-    connect_args={"check_same_thread": False},
-)
+SQLALCHEMY_DATABASE_URL = settings.database_url
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 SessionLocal = sessionmaker(
-    autocommit=False, autoflush=False, bind=engine, expire_on_commit=False
+    autocommit=False,
+    autoflush=False,
+    bind=engine,
+    expire_on_commit=False,
 )
 
 Base = declarative_base()

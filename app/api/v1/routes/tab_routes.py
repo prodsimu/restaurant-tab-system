@@ -1,16 +1,19 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 
 from app.api.v1.schemas.tab_schema import TabResponseSchema
 from app.application.services.tab_service import TabService
-from app.infrastructure.database.database import get_db
-from app.infrastructure.database.repositories.tab_repository import TabRepository
+from app.infrastructure.database.database import SessionLocal
+from app.infrastructure.database.unit_of_work import UnitOfWork
 
 router = APIRouter(tags=["Tabs"])
 
 
-def get_tab_service(db: Session = Depends(get_db)) -> TabService:
-    return TabService(TabRepository(db))
+def get_unit_of_work() -> UnitOfWork:
+    return UnitOfWork(session_factory=SessionLocal)
+
+
+def get_tab_service(uow: UnitOfWork = Depends(get_unit_of_work)) -> TabService:
+    return TabService(uow)
 
 
 # GET

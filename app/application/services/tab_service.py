@@ -66,6 +66,15 @@ class TabService:
 
             return tabs
 
+    def get_tab_total(self, number: int) -> TabWithTotal:
+        with self.uow as uow:
+            tab = uow.tabs.get_open_tab_by_number(number)
+
+            if not tab:
+                raise TabNotFoundError(f"No open tab with number {number} found.")
+
+            return self._calculate_total(uow, tab)
+
     # UPDATE
 
     def close_tab_by_number(self, number: int) -> TabWithTotal:
@@ -75,26 +84,16 @@ class TabService:
             if not tab:
                 raise TabAlreadyClosedError(f"No open tab with number {number} exists.")
 
-            items = uow.items.list_items_by_tab(tab.id)
-
-            total = 0.0
-            for item in items:
-                product = uow.products.get_product_by_id(item.product_id)
-                if product:
-                    total += item.quantity * product.price
+            tab_with_total = self._calculate_total(uow, tab)
 
             closed_tab = uow.tabs.close_tab_by_number(
                 number, datetime.now(timezone.utc)
             )
 
-            return TabWithTotal(
-                id=closed_tab.id,
-                number=closed_tab.number,
-                is_open=closed_tab.is_open,
-                created_at=closed_tab.created_at,
-                closed_at=closed_tab.closed_at,
-                total=round(total, 2),
-            )
+            tab_with_total.is_open = closed_tab.is_open
+            tab_with_total.closed_at = closed_tab.closed_at
+
+            return tab_with_total
 
     # DELETE
 
@@ -106,3 +105,23 @@ class TabService:
                 raise TabNotFoundError(f"Tab with ID {id} not found.")
 
         return {"message": f"Tab with ID {id} deleted successfully"}
+
+    # PRIVATE
+
+    def _calculate_total(self, uow, tab: TabModel) -> TabWithTotal:
+        items = uow.items.list_items_by_tab(tab.id)
+
+        total = 0.0
+        for item in items:
+            product = uow.products.get_product_by_id(item.product_id)
+            if product:
+                total += item.quantity * product.price
+
+        return TabWithTotal(
+            id=tab.id,
+            number=tab.number,
+            is_open=tab.is_open,
+            created_at=tab.created_at,
+            closed_at=tab.closed_at,
+            total=round(total, 2),
+        )

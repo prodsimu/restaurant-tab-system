@@ -26,6 +26,13 @@ def list_all_tabs(
     return service.list_all_tabs()
 
 
+@router.get("/tabs/{number}/total", response_model=TabResponseSchema)
+def get_tab_total(
+    number: int, service: TabService = Depends(get_tab_service)
+) -> TabResponseSchema:
+    return service.get_tab_total(number)
+
+
 @router.get("/tabs/{number}", response_model=list[TabResponseSchema])
 def list_tabs_by_number(
     number: int, service: TabService = Depends(get_tab_service)

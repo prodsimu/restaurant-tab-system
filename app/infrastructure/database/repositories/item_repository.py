@@ -53,6 +53,18 @@ class ItemRepository(ItemRepositoryInterface):
         self.db.refresh(item)
         return item
 
+    def decrement_quantity(self, item: ItemModel, quantity: int) -> ItemModel | None:
+        item.quantity -= quantity
+
+        if item.quantity <= 0:
+            self.db.delete(item)
+            self.db.flush()
+            return None
+
+        self.db.flush()
+        self.db.refresh(item)
+        return item
+
     # DELETE
 
     def delete_item(self, item: ItemModel) -> None:

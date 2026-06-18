@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 
 from app.api.v1.schemas.product_schema import (
     ProductCreateSchema,
@@ -7,16 +6,18 @@ from app.api.v1.schemas.product_schema import (
     ProductUpdateSchema,
 )
 from app.application.services.product_service import ProductService
-from app.infrastructure.database.database import get_db
-from app.infrastructure.database.repositories.product_repository import (
-    ProductRepository,
-)
+from app.infrastructure.database.database import SessionLocal
+from app.infrastructure.database.unit_of_work import UnitOfWork
 
 router = APIRouter(tags=["Products"])
 
 
-def get_product_service(db: Session = Depends(get_db)) -> ProductService:
-    return ProductService(ProductRepository(db))
+def get_unit_of_work() -> UnitOfWork:
+    return UnitOfWork(session_factory=SessionLocal)
+
+
+def get_product_service(uow: UnitOfWork = Depends(get_unit_of_work)) -> ProductService:
+    return ProductService(uow)
 
 
 # GET

@@ -28,6 +28,11 @@ class ItemRepositoryInterface(ABC):
     @abstractmethod
     def increment_quantity(self, item: ItemModel, quantity: int) -> ItemModel: ...
 
+    @abstractmethod
+    def decrement_quantity(
+        self, item: ItemModel, quantity: int
+    ) -> ItemModel | None: ...
+
     # DELETE
 
     @abstractmethod

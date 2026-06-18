@@ -11,6 +11,10 @@ class ItemCreateSchema(ItemBaseSchema):
     pass
 
 
+class ItemUpdateSchema(BaseModel):
+    quantity: int = Field(gt=0)
+
+
 class ItemResponseSchema(BaseModel):
     id: int
     tab_id: int

@@ -1,8 +1,10 @@
-# app/api/v1/routes/item_routes.py
-
 from fastapi import APIRouter, Depends
 
-from app.api.v1.schemas.item_schema import ItemCreateSchema, ItemResponseSchema
+from app.api.v1.schemas.item_schema import (
+    ItemCreateSchema,
+    ItemResponseSchema,
+    ItemUpdateSchema,
+)
 from app.application.services.item_service import ItemService
 from app.infrastructure.database.database import SessionLocal
 from app.infrastructure.database.unit_of_work import UnitOfWork
@@ -38,6 +40,18 @@ def add_item_to_tab(
     service: ItemService = Depends(get_item_service),
 ) -> ItemResponseSchema:
     return service.add_item_to_tab(data)
+
+
+# PATCH
+
+
+@router.patch("/items/{item_id}")
+def decrement_item_quantity(
+    item_id: int,
+    data: ItemUpdateSchema,
+    service: ItemService = Depends(get_item_service),
+):
+    return service.decrement_item_quantity(item_id, data)
 
 
 # DELETE

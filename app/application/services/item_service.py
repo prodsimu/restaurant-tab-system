@@ -1,6 +1,4 @@
-# app/application/services/item_service.py
-
-from app.api.v1.schemas.item_schema import ItemCreateSchema
+from app.api.v1.schemas.item_schema import ItemCreateSchema, ItemUpdateSchema
 from app.domain.entities.item_entity import ItemCreateEntity
 from app.domain.exceptions.item_exceptions import ItemNotFoundError
 from app.domain.exceptions.product_exceptions import ProductNotFoundError
@@ -53,6 +51,24 @@ class ItemService:
                 raise TabNotFoundError("Tab is not open")
 
             return uow.items.list_items_by_tab(tab.id)
+
+    # UPDATE
+
+    def decrement_item_quantity(
+        self, item_id: int, data: ItemUpdateSchema
+    ) -> ItemModel | dict:
+        with self.uow as uow:
+            item = uow.items.get_item_by_id(item_id)
+
+            if not item:
+                raise ItemNotFoundError(f"Item with ID {item_id} not found")
+
+            result = uow.items.decrement_quantity(item, data.quantity)
+
+        if result is None:
+            return {"message": f"Item with ID {item_id} deleted successfully"}
+
+        return result
 
     # DELETE
 

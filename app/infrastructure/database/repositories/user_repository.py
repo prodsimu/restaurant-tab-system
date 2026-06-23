@@ -17,3 +17,8 @@ class UserRepository(UserRepositoryInterface):
         self.db.flush()
         self.db.refresh(user)
         return user
+
+    # READ
+
+    def get_user_by_id(self, user_id: int) -> UserModel | None:
+        return self.db.query(UserModel).filter(UserModel.id == user_id).first()

@@ -11,3 +11,8 @@ class UserRepositoryInterface(ABC):
     def create_user(
         self, username: str, password_hash: str, role: str
     ) -> UserModel: ...
+
+    # READ
+
+    @abstractmethod
+    def get_user_by_id(self, user_id: int) -> UserModel | None: ...

@@ -22,3 +22,6 @@ class UserRepository(UserRepositoryInterface):
 
     def get_user_by_id(self, user_id: int) -> UserModel | None:
         return self.db.query(UserModel).filter(UserModel.id == user_id).first()
+
+    def get_user_by_username(self, username: str) -> UserModel | None:
+        return self.db.query(UserModel).filter(UserModel.username == username).first()

@@ -16,3 +16,6 @@ class UserRepositoryInterface(ABC):
 
     @abstractmethod
     def get_user_by_id(self, user_id: int) -> UserModel | None: ...
+
+    @abstractmethod
+    def get_user_by_username(self, username: str) -> UserModel | None: ...

@@ -7,6 +7,7 @@ from app.infrastructure.database.repositories.product_repository import (
     ProductRepository,
 )
 from app.infrastructure.database.repositories.tab_repository import TabRepository
+from app.infrastructure.database.repositories.user_repository import UserRepository
 
 
 class UnitOfWork:
@@ -20,6 +21,7 @@ class UnitOfWork:
         self.tabs = TabRepository(self.db)
         self.products = ProductRepository(self.db)
         self.items = ItemRepository(self.db)
+        self.users = UserRepository(self.db)
 
         return self
 

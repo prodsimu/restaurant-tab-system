@@ -19,6 +19,7 @@ class TabResponseSchema(BaseModel):
     is_open: bool
     created_at: datetime
     closed_at: datetime | None
+    waiter_id: int
     total: float | None = None
 
     model_config = {"from_attributes": True}

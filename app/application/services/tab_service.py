@@ -18,6 +18,7 @@ class TabWithTotal:
     is_open: bool
     created_at: datetime
     closed_at: datetime | None
+    waiter_id: int
     total: float | None = None
 
 
@@ -28,7 +29,7 @@ class TabService:
 
     # CREATE
 
-    def open_tab_by_number(self, number: int) -> TabModel:
+    def open_tab_by_number(self, number: int, waiter_id: int) -> TabModel:
         with self.uow as uow:
             open_tab = uow.tabs.get_open_tab_by_number(number)
 
@@ -44,6 +45,7 @@ class TabService:
                 is_open=entity.is_open,
                 created_at=entity.created_at,
                 closed_at=entity.closed_at,
+                waiter_id=waiter_id,
             )
 
     # READ
@@ -123,5 +125,6 @@ class TabService:
             is_open=tab.is_open,
             created_at=tab.created_at,
             closed_at=tab.closed_at,
+            waiter_id=tab.waiter_id,
             total=round(total, 2),
         )

@@ -7,6 +7,7 @@ from app.infrastructure.database.database import SQLALCHEMY_DATABASE_URL, Base
 from app.infrastructure.database.models.item_model import ItemModel
 from app.infrastructure.database.models.product_model import ProductModel
 from app.infrastructure.database.models.tab_model import TabModel
+from app.infrastructure.database.models.user_model import UserModel
 
 config = context.config
 

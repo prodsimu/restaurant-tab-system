@@ -15,7 +15,7 @@ class ProductRepository(ProductRepositoryInterface):
         db_model = ProductModel(name=name, price=price)
 
         self.db.add(db_model)
-        self.db.commit()
+        self.db.flush()
         self.db.refresh(db_model)
 
         return db_model
@@ -39,7 +39,7 @@ class ProductRepository(ProductRepositoryInterface):
         for key, value in data.items():
             setattr(product, key, value)
 
-        self.db.commit()
+        self.db.flush()
         self.db.refresh(product)
 
         return product
@@ -53,6 +53,6 @@ class ProductRepository(ProductRepositoryInterface):
             return False
 
         self.db.delete(product)
-        self.db.commit()
+        self.db.flush()
 
         return True

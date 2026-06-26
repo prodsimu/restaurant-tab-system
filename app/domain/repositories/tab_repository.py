@@ -10,7 +10,12 @@ class TabRepositoryInterface(ABC):
 
     @abstractmethod
     def open_tab_by_number(
-        self, number: int, is_open: bool, created_at: datetime, closed_at: datetime
+        self,
+        number: int,
+        is_open: bool,
+        created_at: datetime,
+        closed_at: datetime,
+        waiter_id: int,
     ) -> TabModel: ...
 
     # READ

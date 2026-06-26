@@ -13,7 +13,12 @@ class TabRepository(TabRepositoryInterface):
     # CREATE
 
     def open_tab_by_number(
-        self, number: int, is_open: bool, created_at: datetime, closed_at: datetime
+        self,
+        number: int,
+        is_open: bool,
+        created_at: datetime,
+        closed_at: datetime,
+        waiter_id: int,
     ) -> TabModel:
 
         model = TabModel(
@@ -21,6 +26,7 @@ class TabRepository(TabRepositoryInterface):
             is_open=is_open,
             created_at=created_at,
             closed_at=closed_at,
+            waiter_id=waiter_id,
         )
 
         self.db.add(model)

@@ -30,7 +30,7 @@ class TabRepository(TabRepositoryInterface):
         )
 
         self.db.add(model)
-        self.db.commit()
+        self.db.flush()
         self.db.refresh(model)
 
         return model
@@ -67,7 +67,7 @@ class TabRepository(TabRepositoryInterface):
         tab.is_open = False
         tab.closed_at = closed_at
 
-        self.db.commit()
+        self.db.flush()
         self.db.refresh(tab)
 
         return tab
@@ -81,6 +81,6 @@ class TabRepository(TabRepositoryInterface):
             return False
 
         self.db.delete(tab)
-        self.db.commit()
+        self.db.flush()
 
         return True

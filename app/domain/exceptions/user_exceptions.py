@@ -2,25 +2,25 @@ from app.domain.exceptions.base_exception import AppError
 
 
 class UserNotFoundError(AppError):
-    def __init__(self, detail: str = "User not found"):
-        super().__init__(status_code=404, detail=detail)
+    status_code = 404
+    detail = "User not found"
 
 
 class UserAlreadyExistsError(AppError):
-    def __init__(self, detail: str = "User already exists"):
-        super().__init__(status_code=409, detail=detail)
+    status_code = 409
+    detail = "User already exists"
 
 
 class InvalidCredentialsError(AppError):
-    def __init__(self, detail: str = "Invalid credentials"):
-        super().__init__(status_code=401, detail=detail)
+    status_code = 401
+    detail = "Invalid credentials"
 
 
 class UnauthorizedError(AppError):
-    def __init__(self, detail: str = "Unauthorized"):
-        super().__init__(status_code=401, detail=detail)
+    status_code = 401
+    detail = "Unauthorized"
 
 
 class ForbiddenError(AppError):
-    def __init__(self, detail: str = "Forbidden"):
-        super().__init__(status_code=403, detail=detail)
+    status_code = 403
+    detail = "Forbidden"
